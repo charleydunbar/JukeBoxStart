@@ -96,9 +96,9 @@ public class JukeboxView extends JPanel {
 			String text = e.getActionCommand();
 
 			if (text.equals("Select song 1")) {
-
+				tryPlay("flute.aif");
 			} else if (text.equals("Select song 2")) {
-
+				tryPlay("spacemusic.au");
 			} else if (text.equals("Sign Out")) {
 
 			} else if (text.equals("Login")) {
@@ -108,9 +108,17 @@ public class JukeboxView extends JPanel {
 
 	}
 
+	private void tryPlay(String name) {
+		if (jukebox.tryPlay(name)) {
+			lblInfo.setText(jukebox.getAccount().getID() + " " + jukebox.getAccount().getSeconds());
+		} else {
+			showError();
+		}
+	}
+
 	private void tryLogin() {
 		if (jukebox.login(username.getText(), password.getPassword())) {
-			lblInfo.setText(jukebox.getID());
+			lblInfo.setText(jukebox.getAccount().getID() + " " + jukebox.getAccount().getSeconds());
 		} else {
 			showError();
 		}

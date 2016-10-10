@@ -2,20 +2,19 @@ package model;
 
 import java.time.LocalDate;
 
-public class JukeboxAccount {
+public class Song {
+
 	private String id;
-	private char[] password;
 	private LimitCounter plays;
 	private int seconds;
 
-	public JukeboxAccount(String id, char[] password) {
+	public Song(String id, int seconds) {
 		this.id = id;
-		this.password = password;
 		plays = new LimitCounter(3);
-		seconds = 90000;
+		this.seconds = seconds;
 	}
 
-	public String getID() {
+	public String getName() {
 		return id;
 	}
 
@@ -23,17 +22,12 @@ public class JukeboxAccount {
 		return seconds;
 	}
 
-	public char[] getPassword() {
-		return password;
-	}
-
 	public boolean playable() {
 		return plays.playable(LocalDate.now());
 	}
 
-	public boolean play(int length) {
-		if (length <= seconds && plays.performNew(LocalDate.now())) {
-			seconds -= length;
+	public boolean play() {
+		if (plays.performNew(LocalDate.now())) {
 			return true;
 		} else {
 			return false;

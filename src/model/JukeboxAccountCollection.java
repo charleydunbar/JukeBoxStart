@@ -24,18 +24,17 @@ public class JukeboxAccountCollection {
 	public JukeboxAccount getAccount(String id, char[] password) {
 		tmpAcc = accounts.get(id);
 
-		if (tmpAcc == null || password.length == 0)
+		if (tmpAcc == null || password == null || password.length == 0)
 			return null;
 
-		try {
-			for (int i = 0; i < password.length; i++) {
-				if (password[i] != tmpAcc.getPassword()[i])
-					return null;
-			}
-		} catch (Exception e) {
+		if (password.length != tmpAcc.getPassword().length)
 			return null;
+
+		for (int i = 0; i < password.length; i++) {
+			if (password[i] != tmpAcc.getPassword()[i])
+				return null;
 		}
-		
+
 		return tmpAcc;
 	}
 
