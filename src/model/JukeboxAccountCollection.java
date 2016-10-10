@@ -3,8 +3,8 @@ package model;
 import java.util.HashMap;
 
 public class JukeboxAccountCollection {
-	HashMap<String, JukeboxAccount> accounts;
-	JukeboxAccount tmpAcc;
+	private HashMap<String, JukeboxAccount> accounts;
+	private JukeboxAccount tmpAcc;
 
 	public JukeboxAccountCollection() {
 		accounts = new HashMap<>();
@@ -24,7 +24,7 @@ public class JukeboxAccountCollection {
 	public JukeboxAccount getAccount(String id, char[] password) {
 		tmpAcc = accounts.get(id);
 
-		if (tmpAcc == null)
+		if (tmpAcc == null || password.length == 0)
 			return null;
 
 		try {
