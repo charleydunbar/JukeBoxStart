@@ -1,5 +1,6 @@
+// Charles Dunbar, Mohammad Adlan Fauzi
 package controller;
-//comment
+
 import view.JukeboxView;
 
 import java.awt.Dimension;
@@ -9,6 +10,8 @@ import javax.swing.JPanel;
 
 import model.Jukebox;
 
+// This class is the GUI, however it uses a view to actually
+// set up and maintain the display
 @SuppressWarnings("serial")
 public class JukeboxGUI extends JFrame {
 
@@ -19,11 +22,13 @@ public class JukeboxGUI extends JFrame {
 
 	private Jukebox jukebox;
 
+	// displays GUI
 	public static void main(String[] args) {
 		JukeboxGUI g = new JukeboxGUI();
 		g.setVisible(true);
 	}
 
+	// constructor, sets sizes, properties, and view
 	public JukeboxGUI() {
 		setSize(new Dimension(width, height));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,6 +42,7 @@ public class JukeboxGUI extends JFrame {
 		setViewTo(view);
 	}
 
+	// sets view to requested view
 	private void setViewTo(JPanel newView) {
 		if (currentView != null)
 			remove(currentView);

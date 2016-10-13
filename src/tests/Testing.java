@@ -1,3 +1,4 @@
+// Charles Dunbar, Mohammad Adlan Fauzi
 package tests;
 
 import static org.junit.Assert.*;
@@ -13,14 +14,17 @@ import model.LimitCounter;
 import model.Song;
 import model.TheDecider;
 
-public class CharleyTest {
+// This class tests the functionality of the model classes
+public class Testing {
 
+	// tests Song class
 	@Test
 	public void testSong() {
-		Song song = new Song("flute.aif", 6);
+		Song song = new Song(5.0, "Sun Microsystems", "Flute", ".aif");
 
-		assertTrue("flute.aif".equals(song.getName()));
-		assertEquals(6, song.getSeconds());
+		assertTrue("Flute".equals(song.getName()));
+		assertTrue("Sun Microsystems".equals(song.getArtist()));
+		assertEquals(5.0, song.getLength(), 0.00);
 
 		assertTrue(song.playable());
 
@@ -36,6 +40,7 @@ public class CharleyTest {
 		assertFalse(song.play());
 	}
 
+	// tests JukeboxAccount class
 	@Test
 	public void testJukeboxAccount() {
 		String name = "Dave";
@@ -52,23 +57,34 @@ public class CharleyTest {
 		assertTrue('y' == tmp[2]);
 
 		assertTrue(acc.playable());
+		
+		assertEquals(0, acc.getPlays(LocalDate.now()));
 
 		assertTrue(acc.play(6));
 		assertEquals(89994, acc.getSeconds());
 		assertTrue(acc.playable());
+		
+		assertEquals(1, acc.getPlays(LocalDate.now()));
 
 		assertTrue(acc.play(6));
 		assertEquals(89988, acc.getSeconds());
 		assertTrue(acc.playable());
+		
+		assertEquals(2, acc.getPlays(LocalDate.now()));
 
 		assertTrue(acc.play(6));
 		assertEquals(89982, acc.getSeconds());
 		assertFalse(acc.playable());
+		
+		assertEquals(3, acc.getPlays(LocalDate.now()));
 
 		assertFalse(acc.play(6));
 		assertEquals(89982, acc.getSeconds());
+		
+		assertEquals(3, acc.getPlays(LocalDate.now()));
 	}
 
+	// tests theDecider() class
 	@Test
 	public void testTheDecider() {
 		TheDecider theDecider = new TheDecider();
@@ -78,8 +94,8 @@ public class CharleyTest {
 		JukeboxAccount acc = new JukeboxAccount(name, pass);
 		JukeboxAccount acc2 = new JukeboxAccount(name, pass);
 
-		Song song = new Song("flute.aif", 6);
-		Song song2 = new Song("flute.aif", 6);
+		Song song = new Song(5.0, "Sun Microsystems", "Flute", ".aif");
+		Song song2 = new Song(5.0, "Sun Microsystems", "Flute", ".aif");
 
 		assertTrue(theDecider.decide(acc, song));
 
@@ -108,6 +124,7 @@ public class CharleyTest {
 		assertFalse(theDecider.decide(acc2, song2));
 	}
 
+	// tests LimitCounter class
 	@Test
 	public void testLimitCounter() {
 		LimitCounter limit = new LimitCounter(3);
@@ -128,6 +145,7 @@ public class CharleyTest {
 		assertTrue(limit.performNew(LocalDate.now().plusDays(1)));
 	}
 
+	// tests JukeboxAccountCollection class
 	@Test
 	public void testJukeboxAccountCollection() {
 		JukeboxAccountCollection accs = new JukeboxAccountCollection();
@@ -175,6 +193,7 @@ public class CharleyTest {
 		assertEquals(89982, acc.getSeconds());
 	}
 
+	// tests Jukebox class
 	@Test
 	public void testJukebox() {
 		Jukebox jukebox = new Jukebox();
@@ -183,26 +202,44 @@ public class CharleyTest {
 
 		assertFalse(jukebox.login("Chris", null));
 		assertTrue(jukebox.getAccount() == null);
-		assertFalse(jukebox.tryPlay("flute.aif"));
+		assertFalse(jukebox.tryPlay(0));
+		assertFalse(jukebox.loggedIn());
 
 		assertTrue(jukebox.login("Chris", pass));
 		assertTrue("Chris".equals(jukebox.getAccount().getID()));
+		
+		assertTrue(jukebox.loggedIn());
+		
+		assertTrue(jukebox.tryPlay(0));
 
-		assertFalse(jukebox.tryPlay("hey"));
-		assertTrue(jukebox.tryPlay("flute.aif"));
+		assertEquals(89995, jukebox.getAccount().getSeconds());
 
-		assertEquals(89994, jukebox.getAccount().getSeconds());
-
-		assertTrue(jukebox.tryPlay("spacemusic.au"));
-		assertTrue(jukebox.tryPlay("flute.aif"));
-		assertFalse(jukebox.tryPlay("spacemusic.au"));
+		assertTrue(jukebox.tryPlay(1));
+		assertTrue(jukebox.tryPlay(0));
+		assertFalse(jukebox.tryPlay(1));
 
 		assertTrue(jukebox.login("Devon", pass2));
 
-		assertTrue(jukebox.tryPlay("spacemusic.au"));
-		assertTrue(jukebox.tryPlay("spacemusic.au"));
-		assertFalse(jukebox.tryPlay("spacemusic.au"));
-		assertTrue(jukebox.tryPlay("flute.aif"));
-		assertFalse(jukebox.tryPlay("flute.aif"));
+		assertTrue(jukebox.tryPlay(1));
+		assertTrue(jukebox.tryPlay(1));
+		assertFalse(jukebox.tryPlay(1));
+		assertTrue(jukebox.tryPlay(0));
+		assertFalse(jukebox.tryPlay(0));
+		
+		jukebox.signOut();
+		
+		assertFalse(jukebox.loggedIn());
+	}
+	
+	// tests codeCoverage
+	@Test
+	public void ensureCoverageTest() {
+		Jukebox jukebox = new Jukebox();
+		char[] pass = { '1' };
+		assertTrue(jukebox.login("Chris", pass));
+		
+		jukebox.tryPlay(0);
+		jukebox.tryPlay(0);
+		jukebox.codeCoverage.songFinishedPlaying(null);
 	}
 }

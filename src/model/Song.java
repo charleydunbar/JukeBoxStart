@@ -1,36 +1,56 @@
+// Charles Dunbar, Mohammad Adlan Fauzi
 package model;
 
 import java.time.LocalDate;
 
+// this class serves as a Song, it remembers misc information about itself:
+// playcount via LimitCounter, length, artist, name, songType
 public class Song {
-
-	private String id;
+	private double length;
+	private String artist;
+	private String name;
+	private String songType;
 	private LimitCounter plays;
-	private int seconds;
-
-	public Song(String id, int seconds) {
-		this.id = id;
+	
+	// constructor, initializes variables
+	public Song(double length, String artist, String name, String songType){
+		this.length = length;
 		plays = new LimitCounter(3);
-		this.seconds = seconds;
+		this.artist = artist;
+		this.name = name;
+		this.songType = songType;
 	}
-
-	public String getName() {
-		return id;
+	
+	// "plays" a song if possible, returns if operation was successful
+	public boolean play() {
+		if (plays.performNew(LocalDate.now()))
+			return true;
+		
+		return false;
 	}
-
-	public int getSeconds() {
-		return seconds;
-	}
-
+	
+	// returns whether this song can be played again at current time
 	public boolean playable() {
 		return plays.playable(LocalDate.now());
 	}
-
-	public boolean play() {
-		if (plays.performNew(LocalDate.now())) {
-			return true;
-		} else {
-			return false;
-		}
+	
+	// returns songType (extension)
+	public String getSongType(){
+		return songType;
+	}
+	
+	// returns name
+	public String getName(){
+		return name;
+	}
+	
+	// returns artist
+	public String getArtist(){
+		return artist;
+	}
+	
+	// returns length
+	public double getLength(){
+		return length;
 	}
 }
